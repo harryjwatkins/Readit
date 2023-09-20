@@ -1,31 +1,26 @@
-﻿namespace Readit
+﻿using Newtonsoft.Json;
+
+namespace Readit
 {
-    public class Book
-    {
-        public string Title { get; set; }
-        public string Author { get; set; }
-
-    }
-
     class Program
     {
 
         static public void Main(string[] args)
         {
-            SearchForBook();
-        }
-
-        public static void SearchForBook()
-        {
             string userSearchTerm = GetSearchTermFromUser();
             var bookSearchResult = GetBookDataByTitle(userSearchTerm);
-            Console.WriteLine(bookSearchResult);
+            Console.WriteLine(bookSearchResult.Result);
         }
 
         private static string GetSearchTermFromUser()
         {
-            Console.Write("Please enter a book title");
+            Console.Write("Please enter a book title: ");
             string userSearchTerm = Console.ReadLine();
+            while (string.IsNullOrEmpty(userSearchTerm))
+            {
+                Console.Write("That is empty, please enter a book title: ");
+                userSearchTerm = Console.ReadLine();
+            }
             return userSearchTerm;
         }
 
@@ -40,8 +35,8 @@
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string searchResult = await response.Content.ReadAsStringAsync();
-                    return searchResult;
+                    string searchResultTask = await response.Content.ReadAsStringAsync();
+                    return searchResultTask;
                 }
                 else
                 {
