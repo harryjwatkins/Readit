@@ -6,45 +6,63 @@ namespace Readit
     {
         public class Book
         {
-            public string title { get; set; }
-            public List<string> author_name { get; set; }
+            [JsonProperty("title")]
+            public string? Title { get; set; }
+
+            [JsonProperty("author_name")]
+            public List<string>? AuthorName { get; set; }
         }
 
         public class BookList
         {
-            public List<Book> docs { get; set; }
+            [JsonProperty("docs")]
+            public List<Book>? Results { get; set; }
         }
 
 
     static public void Main(string[] args)
         {
             List<Book> readList = new List<Book>();
+
             string userSearchTerm = GetSearchTermFromUser();
             var bookSearchResult = GetBookDataByTitle(userSearchTerm).Result;
 
-            for (int i = 0; i<bookSearchResult.Count; i++)
-            {
-                var book = bookSearchResult[i];
-                Console.WriteLine("{0}) {1} by {2}", i, book.title, book.author_name[0]);
-            }
+            DisplaySearchResultToUser(bookSearchResult);
+            int userBookChoiceIndex = GetBookChoiceFromUser(bookSearchResult);
+            readList.Add(bookSearchResult[userBookChoiceIndex]);
 
+            DisplayReadList(readList);
+        }
+
+        private static void DisplayReadList(List<Book> readList)
+        {
+            Console.WriteLine("Your current read list is:");
+            for (int i = 0; i < readList.Count; i++)
+            {
+                var book = readList[i];
+                Console.WriteLine("{0} by {1}", book.Title, book.AuthorName[0]);
+            }
+        }
+        private static int GetBookChoiceFromUser(List<Book> bookSearchResult)
+        {
             Console.Write("Please enter the number of the book you want to add to your read list: ");
             var userBookChoiceIndex = Int32.Parse(Console.ReadLine());
-            while (userBookChoiceIndex < 0 || userBookChoiceIndex >= bookSearchResult.Count()) 
+            while (userBookChoiceIndex < 0 || userBookChoiceIndex >= bookSearchResult.Count())
             {
                 Console.Write("That is not a valid number, please try again: ");
                 userBookChoiceIndex = Int32.Parse(Console.ReadLine());
             }
 
-            readList.Add(bookSearchResult[userBookChoiceIndex]);
-            Console.WriteLine("Your current read list is:");
-            for (int i = 0; i < readList.Count; i++)
+            return userBookChoiceIndex;
+        }
+
+        private static void DisplaySearchResultToUser(List<Book> bookSearchResult)
+        {
+            for (int i = 0; i < bookSearchResult.Count; i++)
             {
                 var book = bookSearchResult[i];
-                Console.WriteLine("{0} by {1}", book.title, book.author_name[0]);
+                Console.WriteLine("{0}) {1} by {2}", i, book.Title, book.AuthorName[0]);
             }
-
-
         }
 
         private static string GetSearchTermFromUser()
@@ -75,7 +93,7 @@ namespace Readit
                     BookList bookList = JsonConvert.DeserializeObject<BookList>(searchResultTask);
                     for (int i = 0; i<5; i++)
                     {
-                        topFiveBooks.Add(bookList.docs[i]);
+                        topFiveBooks.Add(bookList.Results[i]);
                     }
                     return topFiveBooks;
                 }
