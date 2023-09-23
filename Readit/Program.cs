@@ -20,7 +20,7 @@ namespace Readit
         }
 
 
-    static public void Main(string[] args)
+        static public void Main(string[] args)
         {
             List<Book> readList = new List<Book>();
 
