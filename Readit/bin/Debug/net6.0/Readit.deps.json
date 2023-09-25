@@ -8,7 +8,8 @@
     ".NETCoreApp,Version=v6.0": {
       "Readit/1.0.0": {
         "dependencies": {
-          "Microsoft.AspNet.WebApi.Client": "5.2.9"
+          "Microsoft.AspNet.WebApi.Client": "5.2.9",
+          "Newtonsoft.Json": "10.0.1"
         },
         "runtime": {
           "Readit.dll": {}

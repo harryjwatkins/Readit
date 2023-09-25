@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Readit
 {
@@ -24,14 +25,48 @@ namespace Readit
         {
             List<Book> readList = new List<Book>();
 
-            string userSearchTerm = GetSearchTermFromUser();
-            var bookSearchResult = GetBookDataByTitle(userSearchTerm).Result;
+            while (true)
+            {
+                DisplayMainMenu();
+                var userMenuChoice = GetMainMenuChoiceFromUser();
+                if (userMenuChoice == "viewReadList")
+                {
+                    DisplayReadList(readList);
+                }
+                else if (userMenuChoice == "addToReadList")
+                {
+                    string userSearchTerm = GetSearchTermFromUser();
+                    var bookSearchResult = GetBookDataByTitle(userSearchTerm).Result;
 
-            DisplaySearchResultToUser(bookSearchResult);
-            int userBookChoiceIndex = GetBookChoiceFromUser(bookSearchResult);
-            readList.Add(bookSearchResult[userBookChoiceIndex]);
+                    DisplaySearchResultToUser(bookSearchResult);
+                    int userBookChoiceIndex = GetBookChoiceFromUser(bookSearchResult);
+                    readList.Add(bookSearchResult[userBookChoiceIndex]);
+                }
+                else if (userMenuChoice == "exitReadit")
+                {
+                    System.Environment.Exit(0);
+                }
 
-            DisplayReadList(readList);
+            }
+        }
+
+        private static void DisplayMainMenu()
+        {
+            Console.WriteLine("What would you like to do");
+            Console.WriteLine("1) Add a book to your read list");
+            Console.WriteLine("2) View your read list");
+            Console.WriteLine("3) Exit Readit");
+        }
+
+        private static string GetMainMenuChoiceFromUser()
+        {
+            Dictionary<int, string> indexFromUserToMenuAction = new Dictionary<int, string>();
+            indexFromUserToMenuAction.Add(1, "addToReadList");
+            indexFromUserToMenuAction.Add(2, "viewReadList");
+            indexFromUserToMenuAction.Add(3, "exitReadit");
+            Console.WriteLine("Please enter your choice: ");
+            var userMenuChoice = Int32.Parse(Console.ReadLine());
+            return indexFromUserToMenuAction[userMenuChoice];
         }
 
         private static void DisplayReadList(List<Book> readList)
