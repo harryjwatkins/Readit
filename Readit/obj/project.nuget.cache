@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "OnREmDD+m3W1B7USRdHGDQ/B/1RnjKU5ocWNA7n/8B8HPFBZhJ9RWdN0YjZEULqMWSz5DMLL0FrbeHmIKjaA4A==",
+  "dgSpecHash": "XVHGqiP5HBzSGFgfyTI3PCT25XuPpcLYiFwHX4jmxXf97cU8LCavh/90wNxxbnFRB4NsEIjECf0kKowUXkZrJw==",
   "success": true,
   "projectFilePath": "C:\\Users\\harry\\development\\Readit\\Readit\\Readit.csproj",
   "expectedPackageFiles": [
@@ -89,7 +89,11 @@
     "C:\\Users\\harry\\.nuget\\packages\\system.threading.timer\\4.3.0\\system.threading.timer.4.3.0.nupkg.sha512",
     "C:\\Users\\harry\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\harry\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\harry\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
+    "C:\\Users\\harry\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
+    "C:\\Users\\harry\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.19\\microsoft.windowsdesktop.app.ref.6.0.19.nupkg.sha512",
+    "C:\\Users\\harry\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.19\\microsoft.netcore.app.ref.6.0.19.nupkg.sha512",
+    "C:\\Users\\harry\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.19\\microsoft.aspnetcore.app.ref.6.0.19.nupkg.sha512",
+    "C:\\Users\\harry\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.19\\microsoft.netcore.app.host.win-x64.6.0.19.nupkg.sha512"
   ],
   "logs": []
 }
