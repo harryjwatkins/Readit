@@ -5,6 +5,8 @@ namespace Readit
 {
     class Program
     {
+        private static List<string> menuNumberChoicesAsString = new List<string>() { "1", "2", "3", "4" };
+
         public class Book
         {
             [JsonProperty("title")]
@@ -47,8 +49,8 @@ namespace Readit
                     string userSearchTerm = GetSearchTermFromUser();
                     var bookSearchResult = GetBookDataByTitle(userSearchTerm).Result;
 
-                    DisplaySearchResultToUser(bookSearchResult);
-                    int userBookChoiceIndex = GetBookChoiceFromUser(bookSearchResult);
+                    DisplayBookListToUser(bookSearchResult);
+                    int userBookChoiceIndex = GetBookChoiceFromUser(bookSearchResult) - 1;
                     readList.Add(bookSearchResult[userBookChoiceIndex]);
                 }
                 else if (userMenuChoice == "removeFromReadList")
@@ -62,6 +64,16 @@ namespace Readit
                 }
 
             }
+        }
+
+        private static List<string> GenerateListOfNumbersAsString(List<Book> listOfBooks)
+        {
+            var listOfNumbers = new List<string>();
+            for (int i = 1; i <= listOfBooks.Count; i++)
+            {
+                listOfNumbers.Add(i.ToString());
+            }
+            return listOfNumbers;
         }
 
         private static void SaveReadListToFile(List<Book> readList)
@@ -99,46 +111,59 @@ namespace Readit
             indexFromUserToMenuAction.Add(3, "viewReadList");
             indexFromUserToMenuAction.Add(4, "exitReadit");
             Console.WriteLine("Please enter your choice: ");
-            var userMenuChoice = Int32.Parse(Console.ReadLine());
+            var userMenuStringInput = Console.ReadLine();
+            while (string.IsNullOrWhiteSpace(userMenuStringInput) || !menuNumberChoicesAsString.Contains(userMenuStringInput)) 
+            {
+                Console.WriteLine("Your choice was not valid, please enter your choice: ");
+                userMenuStringInput = Console.ReadLine();
+            }
+            var userMenuChoice = Int32.Parse(userMenuStringInput);
             return indexFromUserToMenuAction[userMenuChoice];
         }
 
         private static void DisplayReadList(List<Book> readList)
         {
             Console.WriteLine("Your current read list is:");
-            for (int i = 0; i < readList.Count; i++)
-            {
-                var book = readList[i];
-                Console.WriteLine("{0}) {1} by {2}", i, book.Title, book.AuthorName[0]);
-            }
+            DisplayBookListToUser(readList);
         }
 
         private static void RemoveBookFromReadList(List<Book> readList)
         {
             DisplayReadList(readList);
             Console.WriteLine("Please enter the number of the book you would like to remove");
-            int bookIndexToDelete = Int32.Parse(Console.ReadLine());
+            var userBookChoiceAsString = Console.ReadLine();
+            while (string.IsNullOrWhiteSpace(userBookChoiceAsString) || !GenerateListOfNumbersAsString(readList).Contains(userBookChoiceAsString))
+            {
+                Console.WriteLine("Your choice was not valid, please enter your choice: ");
+                userBookChoiceAsString = Console.ReadLine();
+            }
+            int bookIndexToDelete = Int32.Parse(userBookChoiceAsString) - 1;
             readList.RemoveAt(bookIndexToDelete);
         }
 
         private static int GetBookChoiceFromUser(List<Book> bookSearchResult)
         {
             Console.Write("Please enter the number of the book you want to add to your read list: ");
-            var userBookChoiceIndex = Int32.Parse(Console.ReadLine());
-            while (userBookChoiceIndex < 0 || userBookChoiceIndex >= bookSearchResult.Count())
+            var userBookChoiceAsString = Console.ReadLine();
+            while (string.IsNullOrWhiteSpace(userBookChoiceAsString) || !GenerateListOfNumbersAsString(bookSearchResult).Contains(userBookChoiceAsString))
             {
-                Console.Write("That is not a valid number, please try again: ");
-                userBookChoiceIndex = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Your choice was not valid, please enter the number of the book you want to add: ");
+                userBookChoiceAsString = Console.ReadLine();
             }
 
-            return userBookChoiceIndex;
+            return Int32.Parse(userBookChoiceAsString);
         }
 
-        private static void DisplaySearchResultToUser(List<Book> bookSearchResult)
+        private static void DisplayBookListToUser(List<Book> bookList)
         {
-            for (int i = 0; i < bookSearchResult.Count; i++)
+            for (int i = 1; i <= bookList.Count; i++)
             {
-                var book = bookSearchResult[i];
+                var book = bookList[i-1];
+                if (book.AuthorName == null)
+                {
+                    List<string> AuthorName = new List<string>() { "Unknown" };
+                    book.AuthorName = AuthorName;
+                }
                 Console.WriteLine("{0}) {1} by {2}", i, book.Title, book.AuthorName[0]);
             }
         }
@@ -146,7 +171,7 @@ namespace Readit
         private static string GetSearchTermFromUser()
         {
             Console.Write("Please enter a book title: ");
-            string userSearchTerm = Console.ReadLine();
+            var userSearchTerm = Console.ReadLine();
             while (string.IsNullOrEmpty(userSearchTerm))
             {
                 Console.Write("That is empty, please enter a book title: ");
