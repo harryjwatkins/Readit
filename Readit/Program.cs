@@ -23,7 +23,16 @@ namespace Readit
 
         static public void Main(string[] args)
         {
-            List<Book> readList = new List<Book>();
+
+            List<Book> readList;
+            if (File.Exists("readListSave"))
+            {
+                readList = LoadReadListFromFile();
+            }
+            else
+            {
+                readList = new List<Book>();
+            }
 
             while (true)
             {
@@ -42,11 +51,34 @@ namespace Readit
                     int userBookChoiceIndex = GetBookChoiceFromUser(bookSearchResult);
                     readList.Add(bookSearchResult[userBookChoiceIndex]);
                 }
+                else if (userMenuChoice == "removeFromReadList")
+                {
+                    RemoveBookFromReadList(readList);
+                }
                 else if (userMenuChoice == "exitReadit")
                 {
+                    SaveReadListToFile(readList);
                     System.Environment.Exit(0);
                 }
 
+            }
+        }
+
+        private static void SaveReadListToFile(List<Book> readList)
+        {
+            using (StreamWriter file = File.CreateText("readListSave"))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(file, readList);
+            }
+        }
+
+        private static List<Book> LoadReadListFromFile()
+        {
+            using (var file = File.OpenText("readListSave"))
+            {
+                var serializer = new JsonSerializer();
+                return (List<Book>)serializer.Deserialize(file, typeof(List<Book>));
             }
         }
 
@@ -54,16 +86,18 @@ namespace Readit
         {
             Console.WriteLine("What would you like to do");
             Console.WriteLine("1) Add a book to your read list");
-            Console.WriteLine("2) View your read list");
-            Console.WriteLine("3) Exit Readit");
+            Console.WriteLine("2) Remove a book from read list");
+            Console.WriteLine("3) View your read list");
+            Console.WriteLine("4) Exit Readit");
         }
 
         private static string GetMainMenuChoiceFromUser()
         {
             Dictionary<int, string> indexFromUserToMenuAction = new Dictionary<int, string>();
             indexFromUserToMenuAction.Add(1, "addToReadList");
-            indexFromUserToMenuAction.Add(2, "viewReadList");
-            indexFromUserToMenuAction.Add(3, "exitReadit");
+            indexFromUserToMenuAction.Add(2, "removeFromReadList");
+            indexFromUserToMenuAction.Add(3, "viewReadList");
+            indexFromUserToMenuAction.Add(4, "exitReadit");
             Console.WriteLine("Please enter your choice: ");
             var userMenuChoice = Int32.Parse(Console.ReadLine());
             return indexFromUserToMenuAction[userMenuChoice];
@@ -75,9 +109,18 @@ namespace Readit
             for (int i = 0; i < readList.Count; i++)
             {
                 var book = readList[i];
-                Console.WriteLine("{0} by {1}", book.Title, book.AuthorName[0]);
+                Console.WriteLine("{0}) {1} by {2}", i, book.Title, book.AuthorName[0]);
             }
         }
+
+        private static void RemoveBookFromReadList(List<Book> readList)
+        {
+            DisplayReadList(readList);
+            Console.WriteLine("Please enter the number of the book you would like to remove");
+            int bookIndexToDelete = Int32.Parse(Console.ReadLine());
+            readList.RemoveAt(bookIndexToDelete);
+        }
+
         private static int GetBookChoiceFromUser(List<Book> bookSearchResult)
         {
             Console.Write("Please enter the number of the book you want to add to your read list: ");
